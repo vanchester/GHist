@@ -131,7 +131,7 @@ class Steps
 		$totalChains = count($chains);
 		echo "{$totalChains} chain(s) founded\n";
 
-		echo "\n - Parsing history (sleep 3 minutes every 10 chain)\n";
+		echo "\n - Parsing history (sleep 2 minutes every 50 chain)\n";
 
 		foreach ($chains as $key => $getParams) {
 			$this->_showStatus($key + 1, $totalChains);
@@ -141,7 +141,7 @@ class Steps
 
 			$this->_adapter->save($history);
 
-			$key + 1 % 10 ? sleep(1) : sleep(60 * 3);
+			($key + 1) % 50 ? sleep(1) : sleep(60 * 2);
 		}
 	}
 
