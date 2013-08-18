@@ -72,6 +72,8 @@ class Steps
 			$request = $this->_client->post('https://accounts.google.com/ServiceLoginAuth', array(), $formParams);
 			$this->_response = $request->send();
 
+			$this->_response = $this->_client->get($this->_response->getEffectiveUrl().'&ui=html')->send();
+
 			$redirect = $this->_response->isRedirect() || strpos($this->_response->getBody(true), 'nvp_a_arch');
 			if (!$redirect) {
 				echo "Wrong email or password. Try again\n";
