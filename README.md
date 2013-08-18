@@ -7,7 +7,6 @@ Requirements
 ------------
 
 * PHP >= 5.4
-
 * Language 'English (US)' of gmail web interface
 
 How to use
@@ -21,3 +20,8 @@ How to use
 6. Open run.php and change 'admin@vanchester.ru' to your account (will be fixed in next versions)
 7. Open folder with GHist and run run.php
 8. Answer the questions
+
+Demo
+----
+
+[ASCII-video](http://ascii.io/a/4991)
