@@ -17,9 +17,8 @@ How to use
 3. Open folder with chats
 4. Select all chains and add your new label for selected chains
 5. Clone or download code of GHist
-6. Open run.php and change 'admin@vanchester.ru' to your account (will be fixed in next versions)
-7. Open folder with GHist and run run.php
-8. Answer the questions
+6. Open folder with GHist and run run.php
+7. Answer the questions
 
 Demo
 ----

@@ -20,12 +20,6 @@ class TextFile implements AdapterInterface
 	 */
 	private $_ownerJid;
 
-	public function __construct($dir, $ownerJid)
-	{
-		$this->_outputDir = $dir;
-		$this->_ownerJid = $ownerJid;
-	}
-
 	/**
 	 * @param \GHist\HistoryRecord[] $history
 	 */
@@ -38,7 +32,6 @@ class TextFile implements AdapterInterface
 			}
 
 			$fileName = $dir . '/'. date('Y-m-d', $record->date).'.txt';
-
 			$content = date('H:i:s', $record->date) . ' '
 						. $record->from . "\n"
 						. html_entity_decode($record->message."\n\n");
@@ -50,5 +43,21 @@ class TextFile implements AdapterInterface
 			file_put_contents($fileName, $content);
 		}
 	}
+
+	public function getParamsToConfigure()
+	{
+		return array(
+			'outputDir' => 'Output directory',
+			'ownerJid' => 'Your google account name'
+		);
+	}
+
+	public function saveConfiguredParams(array $params = array())
+	{
+		foreach ($params as $name => $val) {
+			$name = '_'.$name;
+			$this->$name = $val;
+		}
+	}
+
 }
- 

@@ -63,7 +63,7 @@ class Parser
 
 		$chats = array();
 		foreach ($form->find('table', 1)->find('a') as $chatLink) {
-			$chats[] = str_replace('&v=c', '&v=pt', $chatLink->href);
+			$chats[] = \html_entity_decode($chatLink->href).'&dhm=1&d=e';
 		}
 
 		return $chats;
@@ -78,28 +78,58 @@ class Parser
 	{
 		$html = str_get_html($htmlContent);
 
-		$content = $html->find('.maincontent', 0);
-
-		if (!$content) {
-			throw new \Exception('Can not find content');
-		}
+		libxml_use_internal_errors(true);
+		$dom = new \DOMDocument();
+		$dom->loadHTML($html);
+		$xpath = new \DOMXPath($dom);
 
 		$history = array();
-		foreach ($content->find('table') as $table) {
-			$trs = $table->find('tr');
-			if (count($trs) < 3) {
+
+		/**
+		 * @var\ DOMNodeList $nodes
+		 * /html/body/table[2]/tbody/tr/td[2]/table[1]/tbody/tr/td[2]/table[4]/tbody/tr/td/table
+		 */
+		$nodes = $xpath->query('/html/body/table[2]/tr[1]/td[2]/table[1]/tr/td[2]/table[*]/tr/td/table');
+		foreach ($nodes as $num => $node) {
+
+			$historyRecord = new HistoryRecord();
+
+			/**
+			 * @var \DOMNode $node
+			 */
+			if ($num == 0) {
 				continue;
 			}
 
-			$historyRecord = new HistoryRecord();
-			$historyRecord->date = \DateTime::createFromFormat(
-				'D, M d, Y g:i a',
-				str_replace(' at', '', trim($trs[0]->find('td', 1)->plaintext)))->getTimestamp();
-			$historyRecord->from = trim($this->_getEmailFromText($trs[0]));
-			$historyRecord->to = trim($this->_getEmailFromText($trs[1]));
-			$historyRecord->message = trim($trs[2]->plaintext);
+			foreach ($node->childNodes as $childNum => $childNode) {
+				switch ($childNum) {
+					case 0:
+						foreach ($childNode->childNodes as $subChildNum => $subChildNode) {
+							switch ($subChildNum) {
+								case 0:
+									$historyRecord->from = $this->_getEmailFromText($subChildNode->textContent);
+									break;
+								case 2:
+									$historyRecord->date = \DateTime::createFromFormat(
+										'D, M d, Y g:i a',
+										str_replace(' at', '', trim($subChildNode->textContent))
+									)->getTimestamp();
+									break;
+							}
+						}
+						break;
+					case 1:
+						$historyRecord->to = $this->_getEmailFromText($childNode->textContent);
+						break;
+					case 3:
+						$historyRecord->message = $childNode->textContent;
+						break;
+				}
+			}
 
-			$history[] = $historyRecord;
+			if (!empty($historyRecord->message)) {
+				$history[] = $historyRecord;
+			}
 		}
 
 		return array_reverse($history);
@@ -114,4 +144,3 @@ class Parser
 		return null;
 	}
 }
- 

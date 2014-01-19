@@ -93,7 +93,7 @@ class Steps
 
 		$this->_labels = $this->_parser->getLabels($this->_response->getBody());
 
-		echo "Founded labels:\n";
+		echo "Found labels:\n";
 		foreach ($this->_labels as $key => $label) {
 			echo ($key + 1) . ": {$label['name']}\n";
 		}
@@ -102,6 +102,24 @@ class Steps
 			echo "Enter the number of label with chats: ";
 			$this->_selectedLabelNum = trim(fgets(STDIN)) - 1;
 		}
+	}
+
+	public function configureAdapter()
+	{
+		$paramsToConfigure = (array)$this->_adapter->getParamsToConfigure();
+
+		if (!$paramsToConfigure) {
+			return;
+		}
+
+		echo "\n- Additional settings\n";
+		$configuredParams = array();
+		foreach ($paramsToConfigure as $name => $hint)
+		{
+			echo "{$hint}: ";
+			$configuredParams[$name] = trim(fgets(STDIN));
+		}
+		$this->_adapter->saveConfiguredParams($configuredParams);
 	}
 
 	public function exportHistory()
@@ -148,7 +166,7 @@ class Steps
 	/**
 	 * Copyright (c) 2010, dealnews.com, Inc.
 	 */
-	private function _showStatus($done, $total, $size=80)
+	private function _showStatus($done, $total, $size=50)
 	{
 		static $start_time;
 
@@ -193,4 +211,3 @@ class Steps
 		}
 	}
 }
- 

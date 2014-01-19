@@ -7,12 +7,13 @@ require __DIR__.'/GHist/SplClassLoader.php';
 $loader = new \SplClassLoader();
 $loader->register();
 
-$outputAdapter = new Adapter\TextFile(__DIR__.'/history/', 'admin@vanchester.ru');
+$outputAdapter = new Adapter\TextFile();
 
 $steps = new Steps($outputAdapter);
 
 $steps->showWelcomeMsg();
 $steps->login();
 $steps->selectLabel();
+$steps->configureAdapter();
 
 $steps->exportHistory();
