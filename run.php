@@ -8,6 +8,7 @@ $loader = new \SplClassLoader();
 $loader->register();
 
 $outputAdapter = new Adapter\TextFile();
+//$outputAdapter = new Adapter\EjabberdMysql();
 
 $steps = new Steps($outputAdapter);
 

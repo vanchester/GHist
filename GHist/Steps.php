@@ -49,7 +49,7 @@ class Steps
 
     public function showWelcomeMsg()
 	{
-		echo "\nGTalk history parser, v1.0\n";
+		echo "\nGTalk history parser, v1.1\n";
 	}
 
 	public function login()
