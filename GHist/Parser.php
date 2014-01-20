@@ -76,11 +76,9 @@ class Parser
 	 */
 	public function parseHistory($htmlContent)
 	{
-		$html = str_get_html($htmlContent);
-
 		libxml_use_internal_errors(true);
 		$dom = new \DOMDocument();
-		$dom->loadHTML($html);
+		$dom->loadHTML(\str_ireplace(array('</div>', '</table>'), array("</div>\r\n", "</table>\r\n"), $htmlContent));
 		$xpath = new \DOMXPath($dom);
 
 		$history = array();
@@ -122,7 +120,7 @@ class Parser
 						$historyRecord->to = $this->_getEmailFromText($childNode->textContent);
 						break;
 					case 3:
-						$historyRecord->message = $childNode->textContent;
+						$historyRecord->message = trim($childNode->textContent);
 						break;
 				}
 			}
