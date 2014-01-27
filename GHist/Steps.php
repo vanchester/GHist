@@ -67,7 +67,9 @@ class Steps
 			$formParams['Email'] = trim(fgets(STDIN));
 
 			echo "Enter password: ";
+			system("stty -echo");
 			$formParams['Passwd'] = trim(fgets(STDIN));
+			system("stty echo");
 
 			$request = $this->_client->post('https://accounts.google.com/ServiceLoginAuth', array(), $formParams);
 			$this->_response = $request->send();
